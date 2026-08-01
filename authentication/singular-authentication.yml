@@ -1,0 +1,25 @@
+generated: '2026-07-21'
+method: searched
+source: https://support.singular.net/hc/en-us + https://api.singular.net/api/v2.0/reporting probe
+summary:
+  types: [apiKey]
+  api_key_in: [query]
+  oauth2_flows: []
+schemes:
+  - name: apiKey
+    type: apiKey
+    in: query
+    parameter: api_key
+    description: >-
+      The Singular Reporting API authenticates with an account API key passed as
+      the api_key request parameter. An unauthenticated request to
+      https://api.singular.net/api/v2.0/reporting returns HTTP 401, confirming
+      that credentials are required. The API key is issued per account from the
+      Singular dashboard (Settings > API keys).
+    sources: [live-probe:401, docs:support.singular.net]
+notes: >-
+  No public OpenAPI/Swagger is served (openapi.json / swagger.json return 404).
+  No OAuth2 or OIDC discovery document is exposed (/.well-known/openid-configuration
+  and /.well-known/oauth-authorization-server return 404), consistent with a
+  key-auth model. SDK-side auth (SDK Key) governs the client mobile SDKs and is
+  distinct from the server-side Reporting API key.

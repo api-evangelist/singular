@@ -1,0 +1,14 @@
+{
+  "repo": "singular",
+  "feeds": [
+    {
+      "source": "https://app.singular.net/react/freesignup/",
+      "feed_url": "https://app.singular.net/react/freesignup/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-07-25T15:00:33Z"
+}

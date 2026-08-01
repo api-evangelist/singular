@@ -1,0 +1,18 @@
+generated: '2026-07-21'
+method: searched
+source: https://status.singular.net + https://api.singular.net/api/v2.0/reporting probe
+versioning:
+  scheme: uri-path
+  current: v2.0
+  evidence: >-
+    Reporting API is served under the /api/v2.0/ path prefix
+    (https://api.singular.net/api/v2.0/reporting returns HTTP 401, auth required).
+status_page: https://status.singular.net
+sla:
+  url: null
+  uptime_target: null
+deprecation:
+  policy_url: null
+  sunset_header: null
+  note: No public deprecation/sunset policy located.
+deprecated_operations: []

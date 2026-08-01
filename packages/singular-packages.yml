@@ -1,0 +1,67 @@
+generated: '2026-07-21'
+method: searched
+source: https://github.com/singular-labs + npm/PyPI/pub.dev/CocoaPods registries
+packages:
+  - language: javascript
+    registry: npm
+    name: singular-sdk
+    url: https://www.npmjs.com/package/singular-sdk
+    install: npm install singular-sdk
+    version: 1.4.10
+    repo: https://github.com/singular-labs/web-sdk
+    description: Singular Web SDK (browser web attribution).
+    official: true
+  - language: dart
+    registry: pub.dev
+    name: singular_flutter_sdk
+    url: https://pub.dev/packages/singular_flutter_sdk
+    install: flutter pub add singular_flutter_sdk
+    version: 1.8.0
+    repo: https://github.com/singular-labs/Singular-Flutter-SDK
+    description: Singular Flutter SDK for mobile attribution.
+    official: true
+  - language: javascript
+    registry: npm
+    name: singular-react-native
+    url: https://www.npmjs.com/package/singular-react-native
+    install: npm install singular-react-native
+    repo: https://github.com/singular-labs/react-native-sdk
+    description: Singular React Native SDK for mobile attribution.
+    official: true
+  - language: swift
+    registry: cocoapods
+    name: Singular-SDK
+    url: https://cocoapods.org/pods/Singular-SDK
+    install: pod 'Singular-SDK'
+    repo: https://github.com/singular-labs/Singular-iOS-SDK
+    description: Singular iOS SDK (Objective-C / Swift) for mobile attribution.
+    official: true
+  - language: csharp
+    registry: github
+    name: Singular-Unity-SDK
+    url: https://github.com/singular-labs/Singular-Unity-SDK
+    install: Import the Singular Unity package from GitHub releases.
+    repo: https://github.com/singular-labs/Singular-Unity-SDK
+    description: Singular Unity SDK for game attribution (distributed via GitHub releases).
+    official: true
+  - language: javascript
+    registry: github
+    name: Singular-Cordova-SDK
+    url: https://github.com/singular-labs/Singular-Cordova-SDK
+    install: cordova plugin add https://github.com/singular-labs/Singular-Cordova-SDK
+    repo: https://github.com/singular-labs/Singular-Cordova-SDK
+    description: Singular Cordova / PhoneGap plugin for mobile attribution.
+    official: true
+  - language: python
+    registry: pypi
+    name: singular-api-client
+    url: https://pypi.org/project/singular-api-client/
+    install: pip install singular-api-client
+    repo: https://github.com/singular-labs/singular_api_client
+    description: Python helper library for the Singular Reporting API.
+    official: true
+notes: >-
+  Client SDKs are published under the Singular org on GitHub (github.com/singular-labs, 108 public repos).
+  Kids/COPPA-compliant variants (Singular-Kids-SDK, Singular-Flutter-Kids-SDK, Singular-Cordova-Kids-SDK)
+  and an Android SDK also ship first-party; the Android SDK is distributed via Singular's Maven repository
+  rather than Maven Central. singular-api-client wraps the Reporting API.

@@ -1,8 +1,28 @@
 aid: singular
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/singular.png
 name: Singular
-description: Singular is a company surfaced as a portfolio company of general-catalyst, norwest-venture-partners
-  and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the
-  enrichment pipeline.
+description: >-
+  Singular (Singular Labs, Inc.) is a mobile measurement partner (MMP) and marketing
+  analytics platform that unifies attribution, cost aggregation, fraud prevention, ad
+  monetization, and cross-platform analytics into a single source of truth. It aggregates
+  campaign, cost, ad-revenue, and creative data from 1,200+ sources, measures omnichannel
+  ROI across mobile, web, CTV, PC, and console, and powers deep linking, SKAdNetwork/SKAN
+  reporting, audience activation, and marketing ETL. The Singular Reporting API plus
+  first-party iOS, Android, Unity, Flutter, React Native, Cordova, and Web SDKs let teams
+  instrument attribution and pull standardized, warehouse-ready marketing data. Used by
+  brands including Airbnb, Lyft, and Rovio.
 url: https://raw.githubusercontent.com/api-evangelist/singular/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -13,10 +33,39 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- Marketing Analytics
+- Mobile Attribution
+- Attribution
+- Marketing
+- Advertising
+- Analytics
+- Mobile Measurement Partner
+- SKAdNetwork
+- Deep Linking
+- Fraud Prevention
+- ETL
+apis:
+- name: Singular Reporting API
+  description: >-
+    REST API for programmatically pulling Singular's unified marketing data — attribution,
+    cost, ad revenue, and creative metrics — as standardized, warehouse-ready reports.
+    Authenticates with an account API key (api_key parameter). Served under /api/v2.0/.
+  humanURL: https://support.singular.net/hc/en-us
+  baseURL: https://api.singular.net
+  tags:
+  - Reporting
+  - Marketing Analytics
+  - Attribution
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+  - type: Lifecycle
+    url: lifecycle/singular-lifecycle.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -25,3 +74,44 @@ maintainers:
 common:
 - type: Website
   url: https://singular.net
+- type: DeveloperPortal
+  url: https://support.singular.net/hc/en-us
+- type: Documentation
+  url: https://support.singular.net/hc/en-us
+- type: Support
+  url: https://support.singular.net/hc/en-us
+- type: Pricing
+  url: https://www.singular.net/pricing/
+- type: SignUp
+  url: https://app.singular.net/react/freesignup/
+- type: Blog
+  url: https://www.singular.net/blog/
+- type: TermsOfService
+  url: https://www.singular.net/terms/
+- type: PrivacyPolicy
+  url: https://www.singular.net/privacy-policy/
+- type: GitHubOrganization
+  url: https://github.com/singular-labs
+- type: StatusPage
+  url: https://status.singular.net
+- type: Integrations
+  url: https://www.singular.net/partner-integrations/
+- type: LLMsTxt
+  url: llms/singular-llms.txt
+- type: Packages
+  url: packages/singular-packages.yml
+- type: SDKs
+  url: packages/singular-packages.yml
+- type: Authentication
+  url: authentication/singular-authentication.yml
+- type: Lifecycle
+  url: lifecycle/singular-lifecycle.yml
+- type: DomainSecurity
+  url: security/singular-domain-security.yml
+- type: WellKnown
+  url: well-known/singular-well-known.yml
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 6
+  pass: local-v1
