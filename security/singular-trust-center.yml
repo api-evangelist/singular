@@ -1,0 +1,46 @@
+generated: '2026-08-12'
+method: searched
+probe: true
+url: https://www.singular.net/data-security-privacy/
+title: Singular Security & Privacy
+certifications:
+  - SOC 1
+  - SOC 2
+  - ISO 27001
+  - ePrivacy
+  - CSA STAR
+  - COPPA (certified by PRIVO)
+  - GDPR Kids (certified by PRIVO)
+  - EU-U.S. Data Privacy Framework
+regulatory_compliance:
+  - GDPR
+  - CCPA
+  - Apple ATT / App Store policy (SKAdNetwork)
+controls_published:
+  data_at_rest: AES-256 encryption; role/permission separation
+  data_in_transit: TLS; VPN-protected internal communication
+  data_retention: user-level data kept for a limited period; configurable retention and erasure
+  backups: verified backups replicated across geographic zones and servers
+  penetration_testing: regular third-party audits and penetration testing
+  access_control: 2FA and SSO supported; granular team roles and permissions
+  deployment: private cloud deployment option (Enterprise plan)
+privacy_apis:
+  - name: OpenDSR (GDPR/CCPA) API
+    discovery: https://gdpr.singular.net/api/gdpr/discovery
+    docs: https://support.singular.net/hc/en-us/articles/360045674671-OpenDSR-GDPR-API-Reference
+    note: >-
+      Singular states it "provides API interfaces for all GDPR and CCPA functions". The
+      anonymous discovery document confirms erasure and access subject-request types.
+evidence:
+  - source: https://www.singular.net/data-security-privacy/
+    http_status: 200
+    fetched: '2026-08-12'
+    keywords: [soc 1, soc 2, iso27001, eprivacy, csa star, coppa, gdpr, ccpa, data privacy framework, penetration testing, encryption]
+  - source: https://gdpr.singular.net/api/gdpr/discovery
+    http_status: 200
+    fetched: '2026-08-12'
+note: >-
+  Singular does not operate a hosted trust-center portal (trust.singular.net, /trust, /security
+  and /compliance all 404). This is a single published security-and-compliance page on the
+  marketing site; the certifications above are the named badges it displays. No audit reports
+  or a certification registry are linked publicly — a customer must request them.

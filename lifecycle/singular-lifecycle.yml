@@ -1,18 +1,65 @@
-generated: '2026-07-21'
+generated: '2026-08-12'
 method: searched
-source: https://status.singular.net + https://api.singular.net/api/v2.0/reporting probe
+source: >-
+  https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference +
+  https://support.singular.net/hc/en-us/articles/17499952586779-PC-Console-API-Endpoint-Reference +
+  https://support.singular.net/hc/en-us/articles/360051908011-Link-Management-API-Reference-Legacy-Links +
+  https://status.singular.net/api/v2/summary.json (200)
 versioning:
   scheme: uri-path
-  current: v2.0
-  evidence: >-
-    Reporting API is served under the /api/v2.0/ path prefix
-    (https://api.singular.net/api/v2.0/reporting returns HTTP 401, auth required).
-status_page: https://status.singular.net
+  global_version: null
+  note: >-
+    There is no single API version. Each endpoint family carries its own path version, so a
+    client integrates against several at once.
+  by_surface:
+    - {api: Reporting, version: 'v2.0', path: /api/v2.0/}
+    - {api: SKAdNetwork reporting, version: 'v2.0', path: /api/v2.0/}
+    - {api: Ad Monetization reporting, version: 'v2.0', path: /api/v2.0/admonetization/}
+    - {api: Singular Links, version: v1, path: /api/v1/singular_links/}
+    - {api: Custom Fraud Rules, version: v1, path: /api/v1/fraud/}
+    - {api: Partner Configuration Changes Log, version: v1, path: /api/v1/partner_configuration/}
+    - {api: 'Server-to-Server SESSION', version: v1, path: 'https://s2s.singular.net/api/v1/launch'}
+    - {api: 'Server-to-Server EVENT', version: v2, path: 'https://s2s.singular.net/api/v2/evt'}
+    - {api: 'Custom Dimensions / Cohort Metrics / Conversion Metrics', version: null, path: /api/}
+    - {api: 'Testing Console (BETA)', version: null, path: /api/event_logger/}
+    - {api: 'OpenDSR (GDPR)', version: null, path: 'https://gdpr.singular.net/api/gdpr/'}
+  evidence: 'An unauthenticated GET of https://api.singular.net/api/v2.0/reporting returns HTTP 401 (auth required), confirming the path is live.'
+status_page:
+  url: https://status.singular.net
+  provider: Atlassian Statuspage
+  machine_readable: https://status.singular.net/api/v2/summary.json
+  http_status: 200
+  components_tracked: [Singular Analytics, and other platform components]
+  subscribe: true
 sla:
   url: null
   uptime_target: null
+  note: >-
+    "Enterprise-grade SLA" is listed as an Enterprise-plan entitlement on
+    https://www.singular.net/pricing/, but no SLA document or uptime target is published; it
+    is contractual.
 deprecation:
   policy_url: null
-  sunset_header: null
-  note: No public deprecation/sunset policy located.
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    Singular publishes no formal deprecation policy and supports no RFC 8594 Sunset/Deprecation
+    headers. Retirements are announced in prose in the endpoint reference and the Product
+    Updates feed, with a dated cutover for new accounts rather than a machine-readable signal.
+  observed_deprecations:
+    - item: Server-to-Server EVENT endpoint V1 (/api/v1/evt)
+      superseded_by: 'https://s2s.singular.net/api/v2/evt'
+      note: '"Accounts created on or after July 15, 2026 must use Event Endpoint V2." V1 remains documented for existing accounts.'
+      source: https://support.singular.net/hc/en-us/articles/17499952586779-PC-Console-API-Endpoint-Reference
+    - item: Link Management API (/api/v1/links/*)
+      superseded_by: Singular Links API (/api/v1/singular_links/*)
+      note: 'Singular labels the reference "[Legacy Links]"; last documentation update 2023-08-23.'
+      source: https://support.singular.net/hc/en-us/articles/360051908011-Link-Management-API-Reference-Legacy-Links
+    - item: singular_id postback field
+      superseded_by: idfv
+      note: 'Marked "Deprecated - Used when LAT is enabled for iOS devices. Use IDFV."'
+      source: https://support.singular.net/hc/en-us/articles/360038040791-Internal-BI-Postbacks-FAQ-and-Troubleshooting
+beta_surfaces:
+  - {api: 'Testing Console API', status: BETA, note: 'Premium feature; must be enabled per account by a Solution Engineer or CSM.'}
+changelog: changelog/singular-changelog.yml
 deprecated_operations: []

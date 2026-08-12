@@ -1,0 +1,124 @@
+generated: '2026-08-12'
+method: derived
+source: mcp/singular-mcp.yml + https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+note: >-
+  Singular publishes NO OpenAPI on any host (see the probe record in
+  conformance/singular-conformance.yml), so the `rest:` column below binds each MCP tool to a
+  DOCUMENTED REST endpoint (method + path) rather than to an operationId — there are no
+  operationIds to bind to. Confidence is set from how directly Singular's own MCP
+  documentation names the backing API. Nothing here is invented: every REST row is an
+  endpoint published in the Singular Help Center, and every tool row is a tool named in the
+  Singular MCP article.
+surfaces:
+  openapi:
+    present: false
+    note: >-
+      Probed /openapi.json, /openapi.yaml, /swagger.json, /api-docs, /docs, /redoc,
+      /v1/openapi.json and /api/v2.0/openapi.json on api.singular.net, s2s.singular.net,
+      gdpr.singular.net, mcp.singular.net and www.singular.net — all 404. The reference is
+      prose in the Zendesk help center.
+  graphql:
+    present: false
+  mcp:
+    url: https://mcp.singular.net/mcp-server/mcp
+    gated: true
+    gate: OAuth 2.0 authorization_code + PKCE, scope mcp:read (tools/list returns 401 invalid_token)
+  rest:
+    base: https://api.singular.net/api/
+    gated: true
+    gate: API key in the `api_key` query parameter or a bare `Authorization` header (no Bearer prefix)
+crosswalk:
+  - tool: get_report
+    category: reporting
+    rest:
+      - POST /api/v2.0/create_async_report
+      - GET /api/v2.0/get_report_status
+    binding: rest
+    confidence: high
+    note: >-
+      Singular's MCP documentation states the MCP "will translate the prompt to an API query
+      from Singular", and the Claude setup section says plainly: "get_report is the Singular
+      API". The Reporting API is asynchronous — create the report, poll status, download the
+      result URL — so one MCP call fans out over at least these two operations.
+  - tool: get_supported_fields
+    category: metadata
+    rest:
+      - GET /api/v2.0/reporting/filters
+      - GET /api/custom_dimensions
+      - GET /api/cohort_metrics
+      - GET /api/conversion_metrics
+    binding: rest
+    confidence: medium
+    note: >-
+      The MCP returns "all fields currently available by the MCP". Singular's public
+      field-enumeration surface is these four metadata endpoints; the mapping is by
+      semantics, not by a documented statement, so confidence is medium.
+  - tool: update_supported_fields
+    category: metadata
+    rest: []
+    binding: mcp-only
+    confidence: high
+    note: >-
+      Mutates the account's MCP field allowlist. No public REST endpoint exposes this — it is
+      MCP-server state, not Reporting API state.
+mcp_only:
+  - tool: update_supported_fields
+    reason: Adds/removes fields on the account's MCP field list; no public REST equivalent.
+rest_only:
+  - capability: SKAdNetwork reporting
+    endpoints:
+      - POST /api/v2.0/create_async_skadnetwork_report
+      - POST /api/v2.0/create_async_skadnetwork_raw_report
+      - GET /api/v2.0/skan_events
+    note: Singular documented SKAN data in the MCP as "coming soon" (2026-06-29).
+  - capability: Ad monetization reporting
+    endpoints:
+      - GET /api/v2.0/admonetization/reporting
+  - capability: Data availability
+    endpoints:
+      - GET /api/v2.0/data_availability_status
+  - capability: Tracking links management
+    endpoints:
+      - POST /api/v1/singular_links/links
+      - GET /api/v1/singular_links/links
+      - GET /api/v1/singular_links/apps
+      - GET /api/v1/singular_links/configured_partners
+      - GET /api/v1/singular_links/domains
+      - GET /api/v1/singular_links/all_partners
+  - capability: Fraud prevention rules and blacklists
+    endpoints:
+      - GET /api/v1/fraud/rules
+      - GET /api/v1/fraud/rules/meta
+      - POST /api/v1/fraud/rules
+      - DELETE /api/v1/fraud/rules
+      - GET /api/fraud/blacklists
+      - POST /api/fraud/blacklists
+  - capability: Server-to-server ingestion
+    endpoints:
+      - POST https://s2s.singular.net/api/v1/launch
+      - POST https://s2s.singular.net/api/v2/evt
+  - capability: Privacy / data subject requests (OpenDSR)
+    endpoints:
+      - GET https://gdpr.singular.net/api/gdpr/discovery
+      - POST https://gdpr.singular.net/api/gdpr/requests
+      - GET https://gdpr.singular.net/api/gdpr/requests/{request_id}
+      - DELETE https://gdpr.singular.net/api/gdpr/requests/{request_id}
+  - capability: Partner configuration change log
+    endpoints:
+      - GET /api/v1/partner_configuration/partner_config_changes
+  - capability: SDK/S2S integration testing console
+    endpoints:
+      - POST /api/event_logger/device
+      - GET /api/event_logger/device
+      - GET /api/event_logger/logs
+      - DELETE /api/event_logger/device
+coverage:
+  tools_named: 3
+  tools_bound_to_rest: 2
+  mcp_only: 1
+  rest_capabilities_total: 10
+  rest_capabilities_with_a_tool: 1
+  note: >-
+    The MCP is a narrow, read-first projection of one capability (aggregated reporting) out of
+    ten documented REST capability groups. Everything attribution-configuration, link
+    management, fraud, ingestion and privacy stays REST-only.

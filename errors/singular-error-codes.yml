@@ -1,0 +1,120 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://support.singular.net/hc/en-us/articles/31542603988379-Server-to-Server-API-Response-Codes-Errors +
+  https://support.singular.net/hc/en-us/articles/53262822713755-Custom-Fraud-Rules-API-Reference +
+  live probes of api.singular.net and s2s.singular.net
+format: proprietary
+note: >-
+  Singular does NOT use RFC 9457 problem+json. It ships two different, deliberately different
+  error envelopes, and an integrator has to know which surface they are on. Nothing below is
+  derived from a spec — Singular publishes no OpenAPI — every row is quoted from the provider's
+  own reference or observed on a live unauthenticated request.
+envelopes:
+  - id: management-api
+    hosts: [api.singular.net, gdpr.singular.net]
+    shape: '{"status": <int>, "substatus": <int>, "value": <string|object>}'
+    success: 'status: 0 (and substatus: 0)'
+    failure: 'status: 1 — the human-readable cause is in `value`'
+    http_semantics: >-
+      Meaningful HTTP status codes ARE used here: 200 success, 401 authentication failure,
+      403 insufficient permissions, 429 rate limit exceeded. Note that a validation/expected
+      application error is still returned as HTTP 200 with status:1 in the body, so a client
+      that only inspects the HTTP status will silently treat a rejection as a success.
+  - id: server-to-server
+    hosts: [s2s.singular.net]
+    shape: '{"status": "ok"|"error", "reason": "<string>"}'
+    success: '{"status": "ok"} with no reason field'
+    failure: '{"status": "error", "reason": "<message>"}'
+    http_semantics: >-
+      "When integrating with Singular's API, all responses return HTTP 200 status codes,
+      requiring validation of the response body's 'status' field to determine success ('ok')
+      or failure ('error')." Any non-200 on this surface means an infrastructure/network
+      problem, not an application error.
+errors:
+  - code: 401
+    envelope: management-api
+    body: '{"status": 1, "substatus": 1, "value": "Missing API Key"}'
+    title: Missing or invalid API key
+    remediation: >-
+      Send the account API key as the `api_key` query parameter or as a bare `Authorization`
+      header value (no Bearer prefix). Keys come from Developer Tools > API Keys in the
+      Singular console.
+    retryable: false
+    observed: {url: 'https://api.singular.net/api/v2.0/reporting', fetched: '2026-08-12'}
+  - code: 403
+    envelope: management-api
+    body: '{"status": 1, "substatus": 1, "value": "User doesn''t have permissions for this operation"}'
+    title: Insufficient permissions
+    remediation: The key belongs to a View Only user calling a write operation; use a key with write permission.
+    retryable: false
+    source: docs:53262822713755
+  - code: 429
+    envelope: management-api
+    body: '{"status": 1, "substatus": 1, "value": "Too many requests. Maximum allowed are 10 requests in a minute"}'
+    title: Rate limit exceeded
+    remediation: Back off and retry; see rate-limits/singular-rate-limits.yml for the per-endpoint budgets.
+    retryable: true
+    source: docs:53262822713755
+  - code: 200
+    envelope: management-api
+    body: '{"status": 1, "substatus": 1, "value": "<error message>"}'
+    title: Validation or expected application error
+    remediation: Inspect the body `status` field, not the HTTP status. Fix the parameter named in `value`.
+    retryable: false
+    source: docs:53262822713755
+  - code: 200
+    envelope: server-to-server
+    reason: 'missing argument: {param}'
+    title: Missing required parameter
+    remediation: >-
+      Add the named parameter and confirm it is not null/empty. Commonly missing: a (API key),
+      p (platform), i (app identifier), ip, and the device identifiers.
+    retryable: false
+    source: docs:31542603988379
+    observed: {url: 'https://s2s.singular.net/api/v2/evt', body: '{"status":"error","reason":"missing argument: n"}', fetched: '2026-08-12'}
+  - code: 200
+    envelope: server-to-server
+    reason: 'invalid platform: {platform}'
+    title: Unsupported or misspelled platform value
+    remediation: >-
+      Use one of the supported, case-sensitive values: Android, iOS, Web, PC, Xbox,
+      Playstation, Nintendo, MetaQuest, CTV. ("Desktop" is the common mistake — the value is "PC".)
+    retryable: false
+    source: docs:31542603988379
+  - code: 200
+    envelope: server-to-server
+    reason: no device ID supplied
+    title: Missing device identifier
+    remediation: >-
+      Supply the platform-appropriate identifier — iOS: idfv (always) + idfa when available;
+      Android/Google Play: asid (always) + aifa when available; Amazon: amid; Chinese OEM:
+      oaid; Web/PC/Console/CTV: sdid.
+    retryable: false
+    source: docs:31542603988379
+  - code: 200
+    envelope: server-to-server
+    reason: 'platform: {platform} should have an {identifier} param'
+    title: Platform / identifier mismatch
+    remediation: >-
+      Send the identifier type that matches the declared platform (e.g. "platform: PC should
+      have an sdid param").
+    retryable: false
+    source: docs:31542603988379
+  - code: 4xx/5xx
+    envelope: server-to-server
+    title: Infrastructure or network error
+    remediation: >-
+      Any non-200 HTTP status on the S2S surface is transient. Retry with exponential backoff —
+      Singular's published guidance is 1-2s initial delay, doubling (2s → 4s → 8s → 16s),
+      capped at 60s, with jitter and 3-5 maximum attempts. 429 warrants a longer backoff.
+    retryable: true
+    source: docs:31542603988379
+retry_policy:
+  documented: true
+  url: https://support.singular.net/hc/en-us/articles/31542603988379-Server-to-Server-API-Response-Codes-Errors
+  non_retryable_markers: [invalid, missing, 'should have', 'no device id']
+  strategy: exponential backoff with jitter, sequential ordering preserved, 3-5 attempts, 60s cap
+  note: >-
+    Singular's own Python client mounts an HTTPAdapter with Retry(connect=5,
+    backoff_factor=0.5, status_forcelist=(500, 502, 503, 504)) for GET and POST.

@@ -1,0 +1,101 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference +
+  https://support.singular.net/hc/en-us/articles/31542603988379-Server-to-Server-API-Response-Codes-Errors +
+  https://github.com/singular-labs/singular_api_client (Singular's own Python client)
+authentication:
+  style: api-key
+  placement: '`api_key` query parameter OR a bare `Authorization` header (no Bearer prefix)'
+  oauth: 'OAuth 2.0 + PKCE only on the MCP surface (scope mcp:read)'
+  detail: authentication/singular-authentication.yml
+request_format:
+  content_type: application/x-www-form-urlencoded
+  note: >-
+    Reporting and S2S writes are form-encoded POSTs, not JSON bodies. List-valued parameters
+    are comma-joined strings ("dimensions": "app,source,os"), and complex filters are a
+    JSON-encoded string inside a form field ("filters": '[{"dimension":"os","operator":"in","values":[1,4]}]').
+response_format:
+  content_type: application/json
+  alternate: 'CSV, selected with `format=csv` on reporting queries'
+  envelope: '{"status": 0, "substatus": 0, "value": {...}} on api.singular.net; {"status":"ok"} on s2s.singular.net'
+  detail: errors/singular-error-codes.yml
+async_job_pattern:
+  supported: true
+  description: >-
+    The core reporting model is asynchronous and is THE convention to understand for this API.
+    POST create_async_report (or the SKAN/unified variants) returns only a `report_id`. The
+    caller then polls GET get_report_status until the report completes, which yields a
+    download URL to an S3-hosted result file. There is no synchronous large-report path.
+  create: POST https://api.singular.net/api/v2.0/create_async_report
+  poll: GET https://api.singular.net/api/v2.0/get_report_status?report_id={id}
+  result: a signed download URL returned in the status response
+  preflight: >-
+    GET /api/v2.0/data_availability_status is the documented preflight — check whether a given
+    day's data has landed from each source before spending a report against it.
+idempotency:
+  supported: false
+  note: >-
+    No idempotency key, no request-deduplication contract, and no `Idempotency-Key` header is
+    documented anywhere in the Singular reference. Repeating a create_async_report call
+    creates another report. On the S2S ingestion surface Singular's own guidance is to retry
+    on failure while maintaining request ORDER, with de-duplication left to Singular's
+    server-side event processing rather than to a client-supplied key.
+pagination:
+  supported: false
+  note: >-
+    No cursor/offset pagination exists. Reporting results are bounded by row limits (200K per
+    query, 100K queried records, 3M per day) and delivered as a whole file; Singular's
+    documented workaround for large pulls is to split by day and iterate. The Testing Console
+    log endpoint caps at 100 events per retrieval with no continuation token.
+filtering:
+  style: 'comma-separated shortcut params (`app`, `source`) plus a JSON `filters` array'
+  operators: [in, 'not in']
+  discovery: GET /api/v2.0/reporting/filters returns every filterable dimension and its allowed values
+field_selection:
+  dimensions_param: dimensions
+  metrics_param: metrics
+  cohort_params: [cohort_metrics, cohort_periods]
+  discovery:
+    - GET /api/custom_dimensions
+    - GET /api/cohort_metrics
+    - GET /api/conversion_metrics
+    - GET /api/v2.0/skan_events
+  note: >-
+    Available dimensions/metrics vary by account and by report type; they are enumerated at
+    runtime through the discovery endpoints above rather than fixed in the contract.
+versioning:
+  scheme: uri-path
+  versions_in_use: [v1, v2, 'v2.0']
+  note: >-
+    Version is per-endpoint-family, not global — Reporting/SKAN are /api/v2.0/, Links, Fraud
+    Rules and Partner Config are /api/v1/, the S2S session endpoint is /api/v1/launch while
+    the S2S event endpoint has moved to /api/v2/evt. Custom Dimensions, Cohort Metrics and
+    Conversion Metrics are served unversioned at /api/.
+  detail: lifecycle/singular-lifecycle.yml
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id/correlation header is documented on any Singular surface. Singular's own
+    error-handling guidance tells integrators to log request parameters, device identifiers
+    and timestamps themselves because there is no server-issued handle to quote in a support
+    ticket.
+rate_limit_signaling:
+  headers: []
+  status: 429
+  detail: rate-limits/singular-rate-limits.yml
+retries:
+  documented: true
+  strategy: exponential backoff with jitter, 3-5 attempts, 60s cap, order preserved
+  retryable: 'non-200 HTTP statuses, network timeouts'
+  non_retryable: 'body reasons containing invalid / missing / "should have" / "no device id"'
+  detail: errors/singular-error-codes.yml
+webhooks:
+  supported: true
+  name: postbacks
+  detail: asyncapi/singular-postbacks-webhooks.yml
+date_and_locale:
+  date_format: 'YYYY-MM-DD (start_date / end_date)'
+  time_breakdown: [day, week, month, all]
+  country_code_format: [iso3, iso]
+  timestamps: 'Unix epoch seconds on fraud-rule objects; UTC event timestamps in postbacks'

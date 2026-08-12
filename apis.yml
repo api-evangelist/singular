@@ -1,16 +1,17 @@
 aid: singular
 accessModel:
-  pricing: unknown
+  pricing: freemium
   onboarding: self-serve
-  trial: false
-  try_now: false
-  public: false
-  label: Self-serve signup
-  confidence: medium
+  trial: true
+  try_now: true
+  public: true
+  label: Free plan with self-serve signup
+  confidence: high
   source:
-  - authentication
-  generated: '2026-07-22'
-  method: derived
+  - https://www.singular.net/pricing/
+  - plans/singular-plans-pricing.yml
+  generated: '2026-08-12'
+  method: searched
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/singular.png
 name: Singular
 description: >-
@@ -19,10 +20,15 @@ description: >-
   monetization, and cross-platform analytics into a single source of truth. It aggregates
   campaign, cost, ad-revenue, and creative data from 1,200+ sources, measures omnichannel
   ROI across mobile, web, CTV, PC, and console, and powers deep linking, SKAdNetwork/SKAN
-  reporting, audience activation, and marketing ETL. The Singular Reporting API plus
-  first-party iOS, Android, Unity, Flutter, React Native, Cordova, and Web SDKs let teams
-  instrument attribution and pull standardized, warehouse-ready marketing data. Used by
-  brands including Airbnb, Lyft, and Rovio.
+  reporting, audience activation, and marketing ETL. Singular exposes a broad REST surface
+  under api.singular.net — asynchronous reporting, SKAdNetwork reporting, ad-monetization
+  reporting, tracking-link management, custom fraud rules, and partner configuration — plus
+  server-to-server session/event ingestion at s2s.singular.net, an OpenDSR (GDPR/CCPA)
+  subject-request API at gdpr.singular.net, and a first-party remote MCP server at
+  mcp.singular.net that lets ChatGPT, Claude, Cursor, Copilot, and Gemini query live campaign
+  data in natural language. First-party iOS, Android, Unity, Flutter, React Native, Cordova,
+  and Web SDKs instrument attribution on the client side. Used by brands including Airbnb,
+  Lyft, and Rovio.
 url: https://raw.githubusercontent.com/api-evangelist/singular/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -33,7 +39,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-21'
+modified: '2026-08-12'
 tags:
 - Company
 - Marketing Analytics
@@ -47,13 +53,18 @@ tags:
 - Deep Linking
 - Fraud Prevention
 - ETL
+- MCP
+- Ad Monetization
+- Privacy
 apis:
 - name: Singular Reporting API
   description: >-
-    REST API for programmatically pulling Singular's unified marketing data — attribution,
-    cost, ad revenue, and creative metrics — as standardized, warehouse-ready reports.
-    Authenticates with an account API key (api_key parameter). Served under /api/v2.0/.
-  humanURL: https://support.singular.net/hc/en-us
+    Asynchronous REST API for programmatically pulling Singular's unified marketing data —
+    attribution, cost, ad revenue, and creative metrics — as standardized, warehouse-ready
+    reports. Create a report, poll get_report_status, then download the result. Companion
+    metadata endpoints enumerate filters, custom dimensions, cohort metrics, conversion
+    metrics, and per-source data availability.
+  humanURL: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
   baseURL: https://api.singular.net
   tags:
   - Reporting
@@ -61,11 +72,199 @@ apis:
   - Attribution
   properties:
   - type: Documentation
-    url: https://support.singular.net/hc/en-us
+    url: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+  - type: GettingStarted
+    url: https://support.singular.net/hc/en-us/articles/207553433-Getting-Started-with-the-Singular-Reporting-API
   - type: Authentication
     url: authentication/singular-authentication.yml
+  - type: RateLimits
+    url: rate-limits/singular-rate-limits.yml
+  - type: Conventions
+    url: conventions/singular-conventions.yml
+  - type: ErrorCatalog
+    url: errors/singular-error-codes.yml
   - type: Lifecycle
     url: lifecycle/singular-lifecycle.yml
+  - type: SDKs
+    url: https://github.com/singular-labs/singular_api_client
+- name: Singular SKAdNetwork API
+  description: >-
+    Asynchronous reporting API for SKAdNetwork and AdAttributionKit data — aggregated SKAN
+    reports, SKAN raw reports, modeled SKAN metrics and events, and the account's SKAN event
+    catalog.
+  humanURL: https://support.singular.net/hc/en-us/articles/360056377792-Singular-SKAdNetwork-API-Reference
+  baseURL: https://api.singular.net
+  tags:
+  - SKAdNetwork
+  - Reporting
+  - Privacy
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/360056377792-Singular-SKAdNetwork-API-Reference
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+- name: Singular Ad Monetization API
+  description: >-
+    Reporting endpoint for ad-monetization revenue pulled from mediation and monetization
+    partners, joinable to user-acquisition campaign data.
+  humanURL: https://support.singular.net/hc/en-us/articles/360045674511-Ad-Monetization-API-Reference
+  baseURL: https://api.singular.net
+  tags:
+  - Ad Monetization
+  - Reporting
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/360045674511-Ad-Monetization-API-Reference
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+- name: Singular Links (Tracking Links) API
+  description: >-
+    Create and manage Singular tracking links programmatically, and enumerate the apps,
+    configured partners, link domains, and available partners an organization can build links
+    against. Supports destination, fallback, deep link, and deferred deep link targets.
+  humanURL: https://support.singular.net/hc/en-us/articles/12506867638939-Singular-Links-Tracking-Links-API
+  baseURL: https://api.singular.net
+  tags:
+  - Deep Linking
+  - Tracking Links
+  - Campaign Management
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/12506867638939-Singular-Links-Tracking-Links-API
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+  - type: RateLimits
+    url: rate-limits/singular-rate-limits.yml
+- name: Singular Custom Fraud Rules API
+  description: >-
+    List, inspect, create, and delete custom fraud-prevention rules for an organization, with
+    a metadata endpoint returning the external-safe option lists. Rules carry an action of
+    Suspicious, Reject, or Whitelist.
+  humanURL: https://support.singular.net/hc/en-us/articles/53262822713755-Custom-Fraud-Rules-API-Reference
+  baseURL: https://api.singular.net
+  tags:
+  - Fraud Prevention
+  - Rules
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/53262822713755-Custom-Fraud-Rules-API-Reference
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+  - type: RateLimits
+    url: rate-limits/singular-rate-limits.yml
+  - type: ErrorCatalog
+    url: errors/singular-error-codes.yml
+- name: Singular Publisher Blacklist API
+  description: >-
+    Read and update the publisher blacklists used by Singular Fraud Prevention to block
+    traffic from specific publisher sites and IDs.
+  humanURL: https://support.singular.net/hc/en-us/articles/40379029045531-Publisher-Blacklist-API-for-Singular-Fraud-Prevention
+  baseURL: https://api.singular.net
+  tags:
+  - Fraud Prevention
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/40379029045531-Publisher-Blacklist-API-for-Singular-Fraud-Prevention
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+- name: Singular Partner Configuration Changes Log API
+  description: >-
+    Audit endpoint returning the log of configuration changes made to an attribution partner's
+    settings, filterable by partner name, platform, and app bundle ID.
+  humanURL: https://support.singular.net/hc/en-us/articles/46588479194139-Partner-Configuration-Changes-Log-API
+  baseURL: https://api.singular.net
+  tags:
+  - Audit
+  - Partner Integrations
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/46588479194139-Partner-Configuration-Changes-Log-API
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+  - type: RateLimits
+    url: rate-limits/singular-rate-limits.yml
+- name: Singular Server-to-Server (S2S) API
+  description: >-
+    Server-side ingestion endpoints for reporting sessions/launches and in-app events without
+    a client SDK — used for PC, console, CTV, web, and server-authoritative mobile
+    integrations. Session notification at /api/v1/launch and event notification at /api/v2/evt.
+    Responses always return HTTP 200; success is signalled by a body status field.
+  humanURL: https://support.singular.net/hc/en-us/articles/17499952586779-PC-Console-API-Endpoint-Reference
+  baseURL: https://s2s.singular.net
+  tags:
+  - Server-to-Server
+  - Events
+  - Attribution
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/31394799175963-Server-to-Server-SESSION-Endpoint-API-Reference
+  - type: APIReference
+    url: https://support.singular.net/hc/en-us/articles/31496864868635-Server-to-Server-EVENT-Endpoint-API-Reference
+  - type: ErrorCatalog
+    url: errors/singular-error-codes.yml
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+- name: Singular OpenDSR (GDPR) API
+  description: >-
+    OpenDSR/OpenGDPR-conformant data subject request API. An anonymous discovery endpoint
+    publishes the supported identity types and subject-request types (erasure, access);
+    authenticated endpoints submit, poll, and cancel subject requests.
+  humanURL: https://support.singular.net/hc/en-us/articles/360045674671-OpenDSR-GDPR-API-Reference
+  baseURL: https://gdpr.singular.net
+  tags:
+  - Privacy
+  - GDPR
+  - CCPA
+  - OpenDSR
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/360045674671-OpenDSR-GDPR-API-Reference
+  - type: Discovery
+    url: well-known/singular-opendsr-discovery.json
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+- name: Singular Testing Console API
+  description: >-
+    BETA integration-testing API. Register a real test device to open a one-hour logging
+    session, then read back exactly what the SDK or S2S integration sent to Singular. Premium
+    feature, enabled per account.
+  humanURL: https://support.singular.net/hc/en-us/articles/4862956954779-Testing-Console-API-Reference-BETA
+  baseURL: https://api.singular.net
+  tags:
+  - Testing
+  - Developer Tools
+  properties:
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/4862956954779-Testing-Console-API-Reference-BETA
+  - type: Sandbox
+    url: sandbox/singular-sandbox.yml
+  - type: RateLimits
+    url: rate-limits/singular-rate-limits.yml
+- name: Singular MCP
+  description: >-
+    First-party remote Model Context Protocol server. Translates a natural-language prompt
+    into a Singular reporting query, runs it against the connecting user's own account under
+    that user's permissions, and returns aggregated marketing data plus field context to the
+    LLM. OAuth 2.0 authorization_code + PKCE, scope mcp:read, with RFC 8414 / RFC 9728
+    metadata and dynamic client registration. Supported in ChatGPT, Claude, Cursor, VS Code
+    Copilot, and Gemini CLI.
+  humanURL: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
+  baseURL: https://mcp.singular.net
+  tags:
+  - MCP
+  - AI
+  - Reporting
+  properties:
+  - type: MCPServer
+    url: mcp/singular-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/singular-tool-crosswalk.yml
+  - type: Documentation
+    url: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
+  - type: Authentication
+    url: authentication/singular-authentication.yml
+  - type: OAuthScopes
+    url: scopes/singular-scopes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -78,10 +277,16 @@ common:
   url: https://support.singular.net/hc/en-us
 - type: Documentation
   url: https://support.singular.net/hc/en-us
+- type: APIReference
+  url: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+- type: GettingStarted
+  url: https://support.singular.net/hc/en-us/articles/207553433-Getting-Started-with-the-Singular-Reporting-API
 - type: Support
   url: https://support.singular.net/hc/en-us
 - type: Pricing
   url: https://www.singular.net/pricing/
+- type: Plans
+  url: plans/singular-plans-pricing.yml
 - type: SignUp
   url: https://app.singular.net/react/freesignup/
 - type: Blog
@@ -96,22 +301,50 @@ common:
   url: https://status.singular.net
 - type: Integrations
   url: https://www.singular.net/partner-integrations/
+- type: ChangeLog
+  url: https://support.singular.net/hc/en-us/articles/360061042971-Product-Updates
+- type: ChangeLog
+  url: changelog/singular-changelog.yml
 - type: LLMsTxt
   url: llms/singular-llms.txt
 - type: Packages
   url: packages/singular-packages.yml
 - type: SDKs
   url: packages/singular-packages.yml
+- type: Components
+  url: components/singular-components.yml
 - type: Authentication
   url: authentication/singular-authentication.yml
+- type: OAuthScopes
+  url: scopes/singular-scopes.yml
+- type: Conventions
+  url: conventions/singular-conventions.yml
+- type: ErrorCatalog
+  url: errors/singular-error-codes.yml
+- type: RateLimits
+  url: rate-limits/singular-rate-limits.yml
 - type: Lifecycle
   url: lifecycle/singular-lifecycle.yml
+- type: Webhooks
+  url: asyncapi/singular-postbacks-webhooks.yml
+- type: MCPServer
+  url: mcp/singular-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/singular-tool-crosswalk.yml
+- type: Sandbox
+  url: sandbox/singular-sandbox.yml
+- type: Conformance
+  url: conformance/singular-conformance.yml
+- type: Compliance
+  url: https://www.singular.net/data-security-privacy/
+- type: TrustCenter
+  url: security/singular-trust-center.yml
 - type: DomainSecurity
   url: security/singular-domain-security.yml
 - type: WellKnown
   url: well-known/singular-well-known.yml
 x-enrichment:
-  date: '2026-07-21'
+  date: '2026-08-12'
   status: enriched
-  artifacts_added: 6
+  artifacts_added: 15
   pass: local-v1

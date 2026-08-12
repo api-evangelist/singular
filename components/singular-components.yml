@@ -1,0 +1,65 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://support.singular.net/hc/en-us/articles/41862111062299-Web-SDK-Overview-Getting-Started +
+  https://support.singular.net/hc/en-us/articles/11031683195163-How-to-Enable-Singular-Banners-Developers-Guide +
+  https://support.singular.net/hc/en-us/articles/12506867638939-Singular-Links-Tracking-Links-API
+note: >-
+  Client-side surfaces a developer embeds in a page or app, as distinct from the server-side
+  and mobile SDKs catalogued in packages/. All of these are loaded into the browser and render
+  or intercept user-facing behaviour.
+families:
+  - family: Web SDK
+    kind: loader script
+    description: >-
+      JavaScript library that identifies the browser, tracks page visits, sessions, conversions
+      and custom events, and attributes web conversions to campaigns. Two supported integration
+      paths: native JavaScript (Singular's recommendation — not blocked by common ad blockers)
+      or the Google Tag Manager custom template.
+    loader:
+      url: https://web-sdk-cdn.singular.net/singular-sdk/latest/singular-sdk.js
+      pinned: false
+      version_in_bundle: 3.27.2
+      last_modified: '2026-03-04'
+      note: >-
+        The documented snippet points at the floating `/latest/` path, so a site owner cannot
+        tell from their own HTML which build they are shipping. Pinned paths DO exist
+        (/singular-sdk/1.0.0/singular-sdk.js resolves 200), but Singular's docs do not use
+        them. The 3.27.2 above was read out of the bundle served on 2026-08-12.
+    credential: SDK Key (Developer Tools > SDK Integration > SDK Keys)
+    availability: 'Web Attribution is an enterprise feature; enabled per account by a CSM.'
+    docs: https://support.singular.net/hc/en-us/articles/41862111062299-Web-SDK-Overview-Getting-Started
+    changelog: https://support.singular.net/hc/en-us/articles/360040645332-Web-SDK-Change-Log
+  - family: Singular Banners (smart banners)
+    kind: rendered embed
+    description: >-
+      Mobile-web banners that route a web visitor into the app and to the right in-app content,
+      designed and maintained from the Singular Banners UI and rendered by the Web SDK.
+    loader:
+      url: https://web-sdk-cdn.singular.net/singular-sdk/latest/singular-sdk.js
+      pinned: false
+    requirements:
+      - Singular Mobile SDK integrated in the app, with deep link support.
+      - >-
+        Client Hints must be granted to Singular: the page must send `accept-ch`
+        (sec-ch-ua-model, sec-ch-ua-platform-version, …) and a `permissions-policy` response
+        header delegating those hints to Singular as a third party.
+    availability: 'Enterprise feature; enabled per account by a CSM.'
+    docs: https://support.singular.net/hc/en-us/articles/11031683195163-How-to-Enable-Singular-Banners-Developers-Guide
+  - family: Google Tag Manager custom template
+    kind: tag-manager template
+    description: >-
+      Singular's published GTM custom template, the no-code path to the Web SDK for marketing
+      teams. Singular notes it is more often blocked by ad blockers than the native install.
+    repo: https://github.com/singular-labs/singular-gtm-template
+    version: 1.4.9
+    published: '2026-02-24'
+    docs: https://support.singular.net/hc/en-us/articles/41863804025883-Web-SDK-Google-Tag-Manager-Implementation-Guide
+  - family: Singular Links (tracking links, QR codes, social landing page)
+    kind: hosted redirect surface
+    description: >-
+      Singular-hosted short links and branded QR codes that resolve to app stores, deep links
+      and deferred deep links, with a Social Landing Page fallback for in-app browsers (since
+      2026-07-27 it opens the app automatically on load rather than requiring a tap).
+    managed_by: Singular Links API (POST /api/v1/singular_links/links) and the Manage Links UI
+    docs: https://support.singular.net/hc/en-us/articles/12506867638939-Singular-Links-Tracking-Links-API

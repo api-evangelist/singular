@@ -1,0 +1,1 @@
+{"resource":"https://mcp.singular.net","resource_name":"Singular MCP","resource_documentation":"https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP-FAQ","authorization_servers":["https://mcp.singular.net"],"bearer_methods_supported":["header"],"jwks_uri":"https://mcp.singular.net/.well-known/jwks.json"}

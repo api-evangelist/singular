@@ -1,6 +1,8 @@
-generated: '2026-07-21'
+generated: '2026-08-12'
 method: searched
-source: https://github.com/singular-labs + npm/PyPI/pub.dev/CocoaPods registries
+source: >-
+  registry.npmjs.org, pypi.org, pub.dev, trunk.cocoapods.org, maven.singular.net,
+  api.github.com/repos/singular-labs/* — all queried unauthenticated on 2026-08-12
 packages:
   - language: javascript
     registry: npm
@@ -8,60 +10,178 @@ packages:
     url: https://www.npmjs.com/package/singular-sdk
     install: npm install singular-sdk
     version: 1.4.10
+    published: '2026-03-04'
     repo: https://github.com/singular-labs/web-sdk
-    description: Singular Web SDK (browser web attribution).
+    description: Singular Web SDK (browser / web attribution).
+    official: true
+    note: >-
+      The package's declared repository (github.com/singular-labs/web-sdk) returns 404 — the
+      source repo is private or renamed, so the published npm artifact is the only public form.
+  - language: javascript
+    registry: npm
+    name: singular-react-native
+    url: https://www.npmjs.com/package/singular-react-native
+    install: npm install singular-react-native
+    version: 4.2.0
+    published: '2026-04-15'
+    repo: https://github.com/singular-labs/react-native-sdk
+    description: Singular React Native SDK for mobile attribution.
     official: true
   - language: dart
     registry: pub.dev
     name: singular_flutter_sdk
     url: https://pub.dev/packages/singular_flutter_sdk
     install: flutter pub add singular_flutter_sdk
-    version: 1.8.0
+    version: 1.9.0
+    published: '2026-08-10'
     repo: https://github.com/singular-labs/Singular-Flutter-SDK
     description: Singular Flutter SDK for mobile attribution.
-    official: true
-  - language: javascript
-    registry: npm
-    name: singular-react-native
-    url: https://www.npmjs.com/package/singular-react-native
-    install: npm install singular-react-native
-    repo: https://github.com/singular-labs/react-native-sdk
-    description: Singular React Native SDK for mobile attribution.
-    official: true
-  - language: swift
-    registry: cocoapods
-    name: Singular-SDK
-    url: https://cocoapods.org/pods/Singular-SDK
-    install: pod 'Singular-SDK'
-    repo: https://github.com/singular-labs/Singular-iOS-SDK
-    description: Singular iOS SDK (Objective-C / Swift) for mobile attribution.
-    official: true
-  - language: csharp
-    registry: github
-    name: Singular-Unity-SDK
-    url: https://github.com/singular-labs/Singular-Unity-SDK
-    install: Import the Singular Unity package from GitHub releases.
-    repo: https://github.com/singular-labs/Singular-Unity-SDK
-    description: Singular Unity SDK for game attribution (distributed via GitHub releases).
-    official: true
-  - language: javascript
-    registry: github
-    name: Singular-Cordova-SDK
-    url: https://github.com/singular-labs/Singular-Cordova-SDK
-    install: cordova plugin add https://github.com/singular-labs/Singular-Cordova-SDK
-    repo: https://github.com/singular-labs/Singular-Cordova-SDK
-    description: Singular Cordova / PhoneGap plugin for mobile attribution.
     official: true
   - language: python
     registry: pypi
     name: singular-api-client
     url: https://pypi.org/project/singular-api-client/
     install: pip install singular-api-client
+    version: 0.8.0
+    published: '2026-07-20'
     repo: https://github.com/singular-labs/singular_api_client
-    description: Python helper library for the Singular Reporting API.
+    description: >-
+      First-party Python helper for the Singular Reporting API. The only server-side client
+      Singular publishes, and — absent an OpenAPI — the most authoritative machine-readable
+      description of the Reporting API surface that exists.
     official: true
+  - language: java
+    registry: maven
+    name: com.singular.sdk:singular_sdk
+    url: https://maven.singular.net/com/singular/sdk/singular_sdk/
+    install: 'maven { url "https://maven.singular.net" } ; implementation "com.singular.sdk:singular_sdk:12.16.0"'
+    version: 12.16.0
+    published: '2026-08-06'
+    repo: null
+    description: Singular Android SDK.
+    official: true
+    note: >-
+      Distributed from Singular's OWN Maven repository (maven.singular.net), not Maven Central —
+      a Maven Central search for the artifact returns nothing. Version and date read from
+      maven-metadata.xml (`release` 12.16.0, `lastUpdated` 20260806120249).
+  - language: objective-c
+    registry: cocoapods
+    name: Singular-SDK
+    url: https://cocoapods.org/pods/Singular-SDK
+    install: "pod 'Singular-SDK'"
+    version: 9.4.2
+    published: '2020-07-22'
+    repo: https://github.com/singular-labs/Singular-iOS-SDK
+    description: Singular iOS SDK (Objective-C / Swift) for mobile attribution.
+    official: true
+    note: >-
+      DECAY SIGNAL. The CocoaPods trunk entry stopped at 9.4.2 on 2020-07-22 (63 versions
+      published, none since), while the iOS SDK itself is at 12.13.0, tagged 2026-07-31 on
+      GitHub. A CocoaPods consumer resolving `pod 'Singular-SDK'` gets a build more than six
+      years behind the shipping SDK. Current iOS distribution is via the GitHub repo / SPM.
+  - language: swift
+    registry: github
+    name: Singular-iOS-SDK
+    url: https://github.com/singular-labs/Singular-iOS-SDK
+    install: Add the package from the GitHub repository (tagged releases).
+    version: 12.13.0
+    published: '2026-07-31'
+    repo: https://github.com/singular-labs/Singular-iOS-SDK
+    description: Singular iOS SDK, current distribution channel (git tags, not CocoaPods trunk).
+    official: true
+    note: 'Version/date read from the repository''s newest tag; the repo publishes no GitHub Releases, so there is no release metadata endpoint.'
+  - language: csharp
+    registry: github
+    name: Singular-Unity-SDK
+    url: https://github.com/singular-labs/Singular-Unity-SDK
+    install: Import the Singular Unity package from the GitHub release assets.
+    version: 5.9.0
+    published: '2026-08-07'
+    repo: https://github.com/singular-labs/Singular-Unity-SDK
+    description: Singular Unity SDK for game attribution.
+    official: true
+  - language: javascript
+    registry: github
+    name: Singular-Cordova-SDK
+    url: https://github.com/singular-labs/Singular-Cordova-SDK
+    install: cordova plugin add https://github.com/singular-labs/Singular-Cordova-SDK
+    version: 1.8.0
+    published: '2025-07-07'
+    repo: https://github.com/singular-labs/Singular-Cordova-SDK
+    description: Singular Cordova / PhoneGap plugin for mobile attribution.
+    official: true
+    note: 'Not published to npm; installed straight from the git URL. Version/date from the newest tag.'
+  - language: javascript
+    registry: github
+    name: singular-gtm-template
+    url: https://github.com/singular-labs/singular-gtm-template
+    install: Import the template into Google Tag Manager.
+    version: 1.4.9
+    published: '2026-02-24'
+    repo: https://github.com/singular-labs/singular-gtm-template
+    description: Singular's Google Tag Manager custom template for web attribution.
+    official: true
+  - language: java
+    registry: github
+    name: Singular-Kids-SDK
+    url: https://github.com/singular-labs/Singular-Kids-SDK
+    install: See the repository README (COPPA/kids-compliant SDK variant).
+    version: 12.0.0
+    published: '2022-11-24'
+    repo: https://github.com/singular-labs/Singular-Kids-SDK
+    description: COPPA/kids-compliant variant of the Singular mobile SDK.
+    official: true
+    note: >-
+      Latest GitHub release is 12.0.0 from 2022-11-24, though the repo itself was pushed
+      2026-07-31 — releases are no longer cut for this variant.
+  - language: dart
+    registry: github
+    name: Singular-Flutter-Kids-SDK
+    url: https://github.com/singular-labs/Singular-Flutter-Kids-SDK
+    install: See the repository README.
+    version: null
+    published: null
+    repo: https://github.com/singular-labs/Singular-Flutter-Kids-SDK
+    description: COPPA/kids-compliant Flutter SDK variant.
+    official: true
+    note: 'No GitHub Releases and no registry entry; version is unresolvable from public metadata. Checked 2026-08-12, nothing to record.'
+  - language: javascript
+    registry: github
+    name: singular-react-native-kids-sdk
+    url: https://github.com/singular-labs/singular-react-native-kids-sdk
+    install: See the repository README.
+    version: null
+    published: null
+    repo: https://github.com/singular-labs/singular-react-native-kids-sdk
+    description: COPPA/kids-compliant React Native SDK variant.
+    official: true
+    note: 'No GitHub Releases and no npm entry; version is unresolvable from public metadata. Checked 2026-08-12.'
+  - language: javascript
+    registry: github
+    name: Singular-Cordova-Kids-SDK
+    url: https://github.com/singular-labs/Singular-Cordova-Kids-SDK
+    install: cordova plugin add https://github.com/singular-labs/Singular-Cordova-Kids-SDK
+    version: null
+    published: null
+    repo: https://github.com/singular-labs/Singular-Cordova-Kids-SDK
+    description: COPPA/kids-compliant Cordova SDK variant.
+    official: true
+    note: 'No GitHub Releases and no registry entry; version is unresolvable from public metadata. Checked 2026-08-12.'
+third_party_integrations:
+  note: >-
+    First-party Singular adapters published for other vendors' SDKs; official Singular code,
+    but distributed through the host vendor's plugin ecosystem rather than a Singular package.
+  packages:
+    - {name: mparticle-android-integration-singular, repo: 'https://github.com/singular-labs/mparticle-android-integration-singular'}
+    - {name: mparticle-apple-integration-singular, repo: 'https://github.com/singular-labs/mparticle-apple-integration-singular'}
+    - {name: mparticle-javascript-integration-singular, repo: 'https://github.com/singular-labs/mparticle-javascript-integration-singular'}
+    - {name: segment-singular-android, repo: 'https://github.com/singular-labs/segment-singular-android'}
+    - {name: segment-singular-ios, repo: 'https://github.com/singular-labs/segment-singular-ios'}
+    - {name: singular_looker_blocks, repo: 'https://github.com/singular-labs/singular_looker_blocks'}
 notes: >-
-  Client SDKs are published under the Singular org on GitHub (github.com/singular-labs, 108 public repos).
-  Kids/COPPA-compliant variants (Singular-Kids-SDK, Singular-Flutter-Kids-SDK, Singular-Cordova-Kids-SDK)
-  and an Android SDK also ship first-party; the Android SDK is distributed via Singular's Maven repository
-  rather than Maven Central. singular-api-client wraps the Reporting API.
+  Singular publishes 12 first-party client libraries across 8 languages/platforms from
+  github.com/singular-labs (100+ public repos, most of them forks of infrastructure
+  dependencies). There is no server-side SDK in any language other than Python, and the Python
+  one wraps only the Reporting API — the Links, Fraud, Partner Config, S2S and OpenDSR APIs
+  have no client library at all. Two distribution channels are stale relative to the shipping
+  code: CocoaPods (2020) and the Kids SDK variants (2022 or unversioned).

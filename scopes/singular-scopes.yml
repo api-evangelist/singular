@@ -1,0 +1,42 @@
+generated: '2026-08-12'
+method: searched
+source: https://mcp.singular.net/.well-known/oauth-authorization-server
+docs: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
+note: >-
+  Singular's REST APIs are API-key authenticated and have no scope surface at all. The only
+  OAuth scopes Singular publishes belong to its two MCP endpoints, and both are declared in
+  RFC 8414 authorization-server metadata fetched anonymously. Singular publishes no scopes
+  reference page; these are read from the metadata documents themselves, which is why the
+  descriptions below are derived from the published server behaviour rather than quoted.
+schemes:
+  - name: Singular MCP
+    source: https://mcp.singular.net/.well-known/oauth-authorization-server
+    resource: https://mcp.singular.net
+    flows:
+      - flow: authorizationCode
+        authorizationUrl: https://mcp.singular.net/oauth_server/authorize
+        tokenUrl: https://mcp.singular.net/oauth_server/token
+        registrationUrl: https://mcp.singular.net/oauth_server/register
+        pkce: [S256]
+  - name: Singular WordPress MCP adapter
+    source: https://www.singular.net/.well-known/oauth-authorization-server
+    resource: https://www.singular.net/wp-json/mcp/mcp-oauth-server
+    flows:
+      - flow: authorizationCode
+        authorizationUrl: https://www.singular.net/oauth/authorize
+        tokenUrl: https://www.singular.net/oauth/token
+        pkce: [S256]
+scopes:
+  - scope: mcp:read
+    description: >-
+      Read-only access to the connecting Singular user's aggregated marketing report data
+      through the Singular MCP server. Singular documents that the MCP inherits the connecting
+      user's own data permissions and cannot reach user-level data.
+    flows: [authorizationCode]
+    sources: [https://mcp.singular.net/.well-known/oauth-authorization-server]
+  - scope: mcp
+    description: >-
+      The single scope advertised by the WordPress MCP adapter on www.singular.net for its
+      website-content MCP endpoint.
+    flows: [authorizationCode]
+    sources: [https://www.singular.net/.well-known/oauth-authorization-server]

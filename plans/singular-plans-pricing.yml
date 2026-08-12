@@ -1,0 +1,72 @@
+generated: '2026-08-12'
+method: searched
+source: https://www.singular.net/pricing/
+currency: USD
+billing_model: usage-based (priced per paid conversion, or by ad spend)
+plan_count: 3
+pricing_guarantee: >-
+  "Transparent Pricing Guarantee — no hidden fees that penalize growth. Pay by ad spend or
+  conversions, whatever works for your apps. Avoid pricey add-ons; we include all the
+  necessities."
+plans:
+  - name: Free
+    price: 0
+    unit: per conversion
+    currency: USD
+    billing_period: usage
+    signup: https://app.singular.net/react/freesignup/
+    credit_card_required: false
+    included_quota:
+      paid_conversions: 15000
+    positioning: Teams in the early stages of building their customer bases and user journeys.
+    includes:
+      - Mobile attribution
+      - Ad monetization reporting and attribution
+      - ROI analytics
+      - Cost aggregation
+      - Data management
+      - Fraud prevention
+      - Email / SMS / social / cross-promo campaign tracking
+      - Deep linking and deferred deep linking
+      - SKAdNetwork attribution
+      - 'APIs ("Powerful APIs")'
+      - SKAdNetwork cohort prediction
+      - Customizable dashboards
+      - Creative reporting
+  - name: Growth
+    price: 0.05
+    unit: per conversion
+    currency: USD
+    billing_period: usage
+    cta: contact sales ("Let's Talk")
+    positioning: Growing teams scaling their user base.
+    includes:
+      - Everything in Free
+      - Technical support
+      - Customer Experience Team
+      - 1-on-1 solutions-engineer onboarding for all customers
+    add_ons:
+      - Automated data exports (no-code plug-and-play ETL)
+  - name: Enterprise
+    price: null
+    unit: custom
+    currency: USD
+    billing_period: contract
+    cta: Book a demo ("Get a customized plan")
+    positioning: Large teams driving incremental growth with custom features and a dedicated success team.
+    includes:
+      - Everything in Growth
+      - Dedicated Customer Success Manager
+      - Enterprise-grade SLA
+      - Cross-device attribution
+      - 365-day cohorts
+      - Audience management
+      - Advanced user permission management
+      - Single Sign-On (SSO)
+      - Private cloud (optional)
+api_access_note: >-
+  API access is not a paid tier gate — "Powerful APIs" and complete log-level exports are
+  listed on the Free plan, and Singular's pricing page states "We don't hold your data hostage
+  behind additional fees. Get your data every way you need; via API, S3 buckets, UI exports,
+  or load it directly to your warehouse of choice." The Testing Console API is the one
+  documented exception: it is a premium feature enabled per-account by a Solution Engineer.

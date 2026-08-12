@@ -1,0 +1,67 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://support.singular.net/hc/en-us/articles/360002675072-How-to-Test-Your-Singular-SDK-Integration +
+  https://support.singular.net/hc/en-us/articles/4862956954779-Testing-Console-API-Reference-BETA
+note: >-
+  Singular has NO test-mode API key, no separate sandbox host, and no test/live key prefixes —
+  every API call runs against live account data. What it does ship is a live-traffic
+  INSPECTION surface: register a real test device, drive real events from it, and read back
+  exactly what Singular received. That is the shape of "sandbox" in the attribution category,
+  and it is captured here. No test values are invented; the identifiers below are Singular's
+  own documentation examples.
+model:
+  test_live_separation: false
+  key_prefixes: []
+  sandbox_host: null
+  detail: >-
+    The same account API key and SDK Key are used for testing and production. Isolation is by
+    registering a specific device for a bounded logging session, not by a mode flag.
+tools:
+  - name: Testing Console
+    kind: real-time inspection
+    availability: >-
+      Premium feature — "needs to be enabled manually by your Solution Engineer or Customer
+      Success Manager". The API form is marked BETA.
+    ui: Singular app > Testing Console
+    api_base: https://api.singular.net/api/event_logger/
+    latency: real-time
+    best_for: Active development and debugging
+    endpoints:
+      - {method: POST, path: /api/event_logger/device, purpose: Register a test device and open a logging session}
+      - {method: GET, path: /api/event_logger/device, purpose: Check whether the device is registered and ready to log}
+      - {method: GET, path: /api/event_logger/logs, purpose: Retrieve what the device sent to Singular}
+      - {method: DELETE, path: /api/event_logger/device, purpose: Unregister the device / close the session}
+    parameters:
+      - {name: api_key, required: true, note: 'Required if not passed in the Authorization header'}
+      - {name: device_id, required: true, example: 058000d94-1972-448b-8c08-32c0ccc81fa4}
+      - {name: keyspace, required: true, example: AIFA, note: 'The type of device ID supplied'}
+      - {name: platform, required: true, example: Android}
+    constraints:
+      session_ttl: 1 hour (re-register the same device to extend by another hour)
+      concurrent_sessions_per_key: 50
+      max_logged_events_per_device: 100 (oldest events are dropped once full)
+      rate_limit: 20 requests per second
+      readiness: 'Even on a 200 registration the console may not be ready — wait ~1-5s and call Check Device Registration.'
+    responses:
+      - {http: 200, body: '{"status":0, "message":"Device unregistered", "open_sessions_num":…, "log_session_info":[session_id, session_start_timestamp, session_expire_timestamp]}'}
+      - {http: 400, body: '{"status":"1", "message":"Invalid request, check required fields"}'}
+      - {http: 204, body: '{"status":"2", "message":"Device not registered"}'}
+  - name: Export Logs
+    kind: user-level data export
+    latency: ~3 hour delay
+    best_for: Historical verification after a test run
+    location: Singular app > Attribution > Export Logs
+    note: >-
+      Also the audit trail for outbound postbacks — select the Postbacks log type with the
+      "Response HTTP Code" and "Response HTTP Body" fields.
+  - name: SDK Audit
+    kind: automated integration audit
+    window: last 3 days of data
+    best_for: Finding integration defects with actionable remediation
+free_tier:
+  available: true
+  note: >-
+    Singular's Free plan ($0 / conversion, 15,000 paid conversions, no credit card) is the
+    practical way to exercise the APIs without a contract — see plans/singular-plans-pricing.yml.
+  signup: https://app.singular.net/react/freesignup/

@@ -1,0 +1,102 @@
+generated: '2026-08-12'
+method: searched
+source: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+limit_count: 9
+note: >-
+  Singular publishes real, per-product limits in its reference — unusually specific for this
+  category. What it does NOT publish is any rate-limit RESPONSE HEADER: there is no
+  X-RateLimit-*, RateLimit-* or Retry-After documented anywhere, and an unauthenticated probe
+  returns none. An agent therefore cannot read its remaining budget at runtime; it only learns
+  it is over the line when a 429 arrives. Recorded here as an honest gap.
+response_headers:
+  documented: []
+  observed: []
+  note: >-
+    Probed https://api.singular.net/api/v2.0/reporting and https://s2s.singular.net/api/v2/evt
+    on 2026-08-12; no rate-limit headers were present on either response.
+exhaustion:
+  status: 429
+  body: '{"status": 1, "substatus": 1, "value": "Too many requests. Maximum allowed are 10 requests in a minute"}'
+  guidance: >-
+    "If receiving 429 errors, reduce request rate and implement request throttling to stay
+    within limits." Singular directs callers to exponential backoff with jitter (see
+    errors/singular-error-codes.yml).
+limits:
+  - api: Reporting API
+    scope: per-account
+    limit: 100
+    unit: concurrently running async reports
+    window: concurrent
+    source: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+  - api: Reporting API
+    scope: per-account
+    limit: 3
+    unit: concurrently running synchronous reports
+    window: concurrent
+    source: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+  - api: Reporting API
+    scope: per-query
+    limit: 200000
+    unit: rows returned per query
+    window: per-request
+    source: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+  - api: Reporting API
+    scope: per-account
+    limit: 3000000
+    unit: rows per day, shared across all queries
+    window: 1 day
+    source: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+  - api: Reporting API
+    scope: per-request
+    limit: 100000
+    unit: queried records per request (max 30-day range)
+    window: per-request
+    note: >-
+      "A single request can query up to 30 days and has a maximum of 100,000 queried records."
+      Singular recommends splitting multi-day pulls into single-day requests.
+    source: https://support.singular.net/hc/en-us/articles/360045245692-Reporting-API-Reference
+  - api: Singular Links (Tracking Links) API
+    scope: per-organization
+    limit: 4
+    unit: links created per minute
+    window: 1 minute
+    burst_ceiling: 100 links/day and 1000 links/month
+    source: https://support.singular.net/hc/en-us/articles/12506867638939-Singular-Links-Tracking-Links-API
+  - api: Singular Links (Tracking Links) API
+    scope: per-organization
+    limit: 4
+    unit: GET requests per minute
+    window: 1 minute
+    source: https://support.singular.net/hc/en-us/articles/12506867638939-Singular-Links-Tracking-Links-API
+  - api: Custom Fraud Rules API
+    scope: per-organization
+    limit: 10
+    unit: requests per minute, shared across list/metadata/create/update/delete
+    window: 1 minute
+    status_on_exhaustion: 429
+    source: https://support.singular.net/hc/en-us/articles/53262822713755-Custom-Fraud-Rules-API-Reference
+  - api: Partner Configuration Changes Log API
+    scope: per-endpoint
+    limit: 5
+    unit: requests per minute
+    window: 1 minute
+    source: https://support.singular.net/hc/en-us/articles/46588479194139-Partner-Configuration-Changes-Log-API
+  - api: Testing Console API (BETA)
+    scope: per-endpoint
+    limit: 20
+    unit: requests per second
+    window: 1 second
+    source: https://support.singular.net/hc/en-us/articles/4862956954779-Testing-Console-API-Reference-BETA
+  - api: Singular MCP
+    scope: per-query
+    limit: null
+    unit: characters returned per query
+    window: per-request
+    note: >-
+      Bounded by the LLM client rather than by Singular — "ChatGPT for example is limited up
+      to 50k characters per query ... while Claude supports up to 100k characters."
+    source: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
+adjustment_policy: >-
+  "Singular reserves the right to adjust the rate limit for given endpoints in order to
+  continue and provide a high quality of service to all of our customers. Contact us if
+  there's a specific need to exceed the default limitation."

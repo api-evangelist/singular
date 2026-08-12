@@ -1,0 +1,103 @@
+generated: '2026-08-12'
+method: searched
+spec_type: none
+source: >-
+  https://support.singular.net/hc/en-us/articles/360038040791-Internal-BI-Postbacks-FAQ-and-Troubleshooting +
+  https://support.singular.net/hc/en-us/articles/360053018851-How-to-Configure-Partner-Settings-and-Postbacks +
+  https://support.singular.net/hc/en-us/articles/360058106812-Postback-Server-IP-Addresses
+note: >-
+  Singular publishes NO AsyncAPI document — /asyncapi.yaml and /asyncapi.json are absent and
+  nothing in the GitHub org carries one. It does, however, operate a substantial real-time
+  outbound event surface it calls POSTBACKS, and documents the delivery contract, retry
+  schedule, source IP ranges and payload fields. That catalog is captured here verbatim; no
+  AsyncAPI is fabricated on Singular's behalf.
+surface: webhooks
+name: Singular Postbacks
+delivery:
+  transport: HTTPS
+  method: POST
+  content_type: application/json
+  destination: >-
+    A customer- or partner-supplied postback URL configured per partner in the Singular console
+    (Attribution > Partner Configuration).
+  success_criterion: HTTP 200 from the receiver
+  retries:
+    count: 5
+    schedule_minutes: [1, 5, 15, 30, 60]
+    trigger: 'a response code between 500 and 599 (or a delivery failure)'
+  source_ips:
+    note: Whitelist these if the receiving endpoint filters by source address.
+    cidrs:
+      - 198.134.6.0/23
+      - 44.239.146.125/32
+      - 54.200.124.61/32
+      - 54.69.245.48/32
+      - 34.208.244.242/32
+      - 34.212.94.34/32
+      - 44.239.107.210/32
+      - 44.237.116.233/32
+      - 44.240.64.97/32
+      - 35.85.128.184/32
+      - 35.160.64.114/32
+      - 44.235.165.174/32
+      - 35.155.194.216/32
+    source: https://support.singular.net/hc/en-us/articles/360058106812-Postback-Server-IP-Addresses
+  observability: >-
+    Delivery is auditable from Attribution > Export Logs with the Postbacks log type; the
+    "Response HTTP Code" and "Response HTTP Body" fields record what the receiver returned.
+  signing: null
+  signing_note: >-
+    No HMAC signature, shared secret or signed-timestamp scheme is documented. Receiver-side
+    verification is by source IP allowlist and by the passthrough parameters the customer set
+    on the tracking link.
+channels:
+  - id: internal-bi-postbacks
+    direction: outbound
+    description: >-
+      Real-time per-event notifications to the customer's own BI/warehouse endpoint for
+      installs, re-engagements, sessions, uninstalls, reinstalls, revenue events and any
+      custom in-app event.
+    docs: https://support.singular.net/hc/en-us/articles/360038040791-Internal-BI-Postbacks-FAQ-and-Troubleshooting
+  - id: partner-attribution-postbacks
+    direction: outbound
+    description: >-
+      Attribution notifications forwarded to an ad network / attribution partner per the
+      partner configuration, subject to each network's data-sharing limitations.
+    docs: https://support.singular.net/hc/en-us/articles/360053018851-How-to-Configure-Partner-Settings-and-Postbacks
+  - id: fraud-postbacks
+    direction: outbound
+    description: Notifications for installs and events Singular's fraud prevention rejected or flagged.
+    docs: https://support.singular.net/hc/en-us/articles/360028004872-Fraud-Postbacks-FAQ-and-Troubleshooting
+  - id: skadnetwork-postbacks
+    direction: inbound
+    description: >-
+      SKAdNetwork / AdAttributionKit postbacks sent by Apple or by ad networks TO Singular for
+      SKAN attribution and conversion-value modelling.
+    docs: https://support.singular.net/hc/en-us/articles/4405749380379-How-to-Send-SKAdNetwork-AdAttributionKit-Postbacks-to-Singular
+  - id: conversion-postbacks-web-pc-console
+    direction: outbound
+    description: Conversion notifications for web, PC and console attribution surfaces.
+    docs: https://support.singular.net/hc/en-us/articles/19017155637403-Conversion-Postbacks-for-Web-PC-and-Console-FAQ
+payload_fields:
+  note: >-
+    Selected fields from Singular's published internal-BI postback structure. The full field
+    list, plus macro/passthrough parameters, is in the docs linked above.
+  fields:
+    - {name: app_name, type: string, description: Display name of the application}
+    - {name: longname, type: string, description: Bundle ID / long name of the application}
+    - {name: platform, type: string, description: 'iOS, Android, Web, PC/Console'}
+    - {name: event_name, type: string, description: 'Event name; includes auto-tracked events (install, session, uninstall, reinstall, revenue)'}
+    - {name: idfa, type: string, description: Unhashed iOS advertising identifier}
+    - {name: idfv, type: string, description: Unhashed iOS identifier for vendor}
+    - {name: aifa, type: string, description: Unhashed Android advertising identifier}
+    - {name: android_id, type: string, description: Unhashed Android ID (only when aifa is unavailable)}
+    - {name: singular_id, type: string, description: 'DEPRECATED — was used when LAT was enabled on iOS; use idfv'}
+    - {name: event_utc_timestamp, type: string, description: UTC timestamp of the event}
+macros:
+  docs: https://support.singular.net/hc/en-us/articles/115004063323-Postback-Macros-and-Passthrough-Parameters-for-Ad-Networks
+  description: >-
+    Postback URLs are templated with Singular macros and passthrough parameters so a receiver
+    can be handed campaign, creative, device and custom values inline.
+privacy:
+  docs: https://support.singular.net/hc/en-us/articles/18148384149019-User-Privacy-for-Postbacks-FAQ
+  note: Postback content is subject to per-network data-sharing limits and user-privacy configuration.

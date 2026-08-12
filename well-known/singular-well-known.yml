@@ -1,24 +1,97 @@
-generated: '2026-07-21'
+generated: '2026-08-12'
 method: probed
-source: live HTTPS probes of Singular hosts
+source: live HTTPS probes of every Singular host named in apis.yml and the Singular docs
 note: >-
-  No /.well-known/ discovery documents were served (all 404). Recorded as valid
-  negative data. singular.net serves an llms.txt (captured separately in llms/).
+  Second-round probe. The first round (2026-07-21) recorded every /.well-known/ path as
+  404 because it only checked singular.net, api.singular.net and app.singular.net. Probing
+  the MCP host (mcp.singular.net), discovered from the Singular MCP documentation, returned
+  a real RFC 8414 OAuth authorization-server metadata document, an RFC 9728 protected-resource
+  metadata document and a JWKS — all saved verbatim below. www.singular.net additionally
+  serves its own pair of OAuth metadata documents for a WordPress-hosted MCP endpoint
+  (/wp-json/mcp/mcp-oauth-server). No security.txt is served on any host, so no SecurityTxt
+  pointer is emitted. api.singular.net, s2s.singular.net and gdpr.singular.net serve no
+  /.well-known/ documents at all.
 hosts:
-  - host: https://singular.net
+  - host: https://mcp.singular.net
+    role: Singular MCP server (product)
     documents:
+      - {path: /.well-known/oauth-authorization-server, status: 200, file: singular-mcp-oauth-authorization-server.json}
+      - {path: /.well-known/oauth-protected-resource, status: 200, file: singular-mcp-oauth-protected-resource.json}
+      - {path: /.well-known/jwks.json, status: 200, file: singular-mcp-jwks.json}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /openapi.json, status: 404}
+  - host: https://www.singular.net
+    role: marketing site (WordPress) + WordPress MCP adapter
+    documents:
+      - {path: /.well-known/oauth-authorization-server, status: 200, file: singular-wordpress-oauth-authorization-server.json}
+      - {path: /.well-known/oauth-protected-resource, status: 200, file: singular-wordpress-oauth-protected-resource.json}
+      - {path: /llms.txt, status: 200, file: ../llms/singular-llms.txt}
       - {path: /.well-known/security.txt, status: 404}
       - {path: /.well-known/openid-configuration, status: 404}
-      - {path: /.well-known/oauth-authorization-server, status: 404}
       - {path: /.well-known/api-catalog, status: 404}
       - {path: /.well-known/ai-plugin.json, status: 404}
-      - {path: /llms.txt, status: 200, file: ../llms/singular-llms.txt}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+  - host: https://gdpr.singular.net
+    role: OpenDSR (GDPR/CCPA) API
+    documents:
+      - {path: /api/gdpr/discovery, status: 200, file: singular-opendsr-discovery.json,
+         note: 'Not a /.well-known/ path, but a real anonymous machine-readable discovery document (OpenDSR/OpenGDPR api_version 0.1.4) declaring supported identities and subject-request types.'}
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
   - host: https://api.singular.net
+    role: Reporting / SKAdNetwork / Ad Monetization / Links / Fraud APIs
     documents:
       - {path: /.well-known/security.txt, status: 404}
       - {path: /.well-known/openid-configuration, status: 404}
       - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/oauth-protected-resource, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+      - {path: /.well-known/ai-plugin.json, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /llms.txt, status: 404}
+      - {path: /openapi.json, status: 404}
+  - host: https://s2s.singular.net
+    role: Server-to-Server session/event ingestion
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /openapi.json, status: 404}
   - host: https://app.singular.net
+    role: customer console
     documents:
       - {path: /.well-known/security.txt, status: 404}
       - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+  - host: https://support.singular.net
+    role: Zendesk help center (developer documentation)
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/agent.json, status: 404}
+      - {path: /llms.txt, status: 404}
+    note: >-
+      Cloudflare bot-challenges plain HTTP clients on /hc/ pages (403). The Zendesk Help
+      Center REST API at /api/v2/help_center/ answers anonymously and was used to read
+      the developer documentation for this pass.
+  - host: https://i.singular.net
+    role: impression tracking endpoint
+    documents:
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/security.txt, status: 404}
+  - host: https://c.singular.net
+    role: click tracking endpoint
+    documents:
+      - {path: /.well-known/agent-card.json, status: 404}
+      - {path: /.well-known/security.txt, status: 404}

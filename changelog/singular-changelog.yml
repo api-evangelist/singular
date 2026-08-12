@@ -1,0 +1,93 @@
+generated: '2026-08-12'
+method: searched
+source: https://support.singular.net/hc/en-us/articles/360061042971-Product-Updates
+title: Singular Product Updates
+last_updated: '2026-07-27'
+scheme:
+  type: dated product-update log
+  versioned: false
+  note: >-
+    Singular publishes a single continuously-updated, date-stamped "Product Updates" article
+    tagged by product area (Reporting, Links, MCP, Integrations, Fraud Prevention, Audiences,
+    SDKs, Data Connectors). It is not a semver release feed and carries no explicit
+    breaking-change flag — breaking items are called out in prose. There is no changelog RSS
+    or JSON feed; the Zendesk Help Center REST API
+    (/api/v2/help_center/en-us/articles/360061042971.json) is the only machine-readable route
+    to it, and its `updated_at` is the freshness signal.
+  api_release_notes: >-
+    API-affecting changes appear in this same feed rather than in a separate API changelog;
+    the S2S Event endpoint V1→V2 cutover, for example, is announced in the endpoint reference
+    (accounts created on or after 2026-07-15 must use V2).
+window: recent (most recent entries only; the live article is the source of truth)
+entries:
+  - date: '2026-07-27'
+    area: Deep Links
+    title: 'Social Landing Page: no-click flow for automatic app opens'
+    breaking: false
+    highlights:
+      - Landing page now opens the app automatically on load when schema links and a deep link destination are configured.
+      - 'Android: enabled by default. iOS: add _force_redirect=true to the link.'
+  - date: '2026-07-20'
+    area: Reporting
+    title: App name now resolved from tracker data for unenriched events
+    breaking: false
+    highlights:
+      - Rows that previously showed N/A for app name now resolve from tracker data.
+      - Forward-looking only; past reporting is unchanged. Only app name is affected.
+  - date: '2026-07-19'
+    area: Integrations
+    title: Singular and Roku partner to drive CTV performance at scale
+    breaking: false
+  - date: '2026-07-12'
+    area: Integrations
+    title: Walmart Connect attribution support
+    breaking: false
+    highlights:
+      - Walmart Connect can be configured as a partner and receives install/event postbacks.
+  - date: '2026-07-09'
+    area: Partnership / CTV
+    title: Singular becomes a tvScientific by Pinterest Certified Measurement Partner
+    breaking: false
+  - date: '2026-07-05'
+    area: MCP
+    title: Assists & MTA data now in Singular MCP
+    breaking: false
+    highlights:
+      - Assist and multi-touch-attribution data can now be surfaced and visualised through the MCP.
+  - date: '2026-06-29'
+    area: Links
+    title: Self-serve delete links in the Singular UI
+    breaking: false
+  - date: '2026-06-18'
+    area: Reporting / TikTok
+    title: TikTok data sharing relaxed for attributed view-through conversions
+    breaking: false
+    highlights:
+      - Campaign metadata fields in TikTok view-through data are no longer restricted in user-level reporting.
+      - Attributed impression IP address remains restricted. Applied automatically.
+  - date: '2026-06-16'
+    area: MCP
+    title: Creative data and AI tags available via Singular MCP
+    breaking: false
+  - date: '2026-06-11'
+    area: Reporting / Fraud Prevention / Audiences / Owned Media / Integrations
+    title: '"10% Update" release wave'
+    breaking: false
+    highlights:
+      - New Heatmap dashboard widget plotting two dimensions against one metric across reports, SKAN and creative data.
+  - date: '2026-05-25'
+    area: Onboarding
+    title: Partners & Agencies onboarding updates
+    breaking: false
+  - date: '2026-05-12'
+    area: Ad Attribution Kit / Singular Links / Creative IQ / Web Attribution
+    title: May product update wave
+    breaking: false
+  - date: '2026-04-16'
+    area: Data Connectors
+    title: Meta data connector updates
+    breaking: false
+  - date: '2026-03-26'
+    area: Web SDK
+    title: Web SDK product update
+    breaking: false
