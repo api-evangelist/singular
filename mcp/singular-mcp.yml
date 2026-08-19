@@ -7,17 +7,16 @@ server:
   transport: http
   url: https://mcp.singular.net/mcp-server/mcp
   documentation: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
-  description: >-
-    Singular's first-party remote MCP server. It translates a natural-language prompt into
-    a Singular Reporting API query, runs it against the caller's own Singular account, and
-    returns the aggregated marketing result set (installs, cost, revenue, ROI, assists/MTA)
-    plus field context back to the LLM client. Singular says it was the first mobile
-    measurement partner to ship an MCP integration.
+  description: Singular's first-party remote MCP server. It translates a natural-language prompt into
+    a Singular Reporting API query, runs it against the caller's own Singular account, and returns the
+    aggregated marketing result set (installs, cost, revenue, ROI, assists/MTA) plus field context back
+    to the LLM client. Singular says it was the first mobile measurement partner to ship an MCP integration.
 authentication:
   type: oauth2
   flow: authorizationCode
   pkce: S256
-  scopes: [mcp:read]
+  scopes:
+  - mcp:read
   authorization_endpoint: https://mcp.singular.net/oauth_server/authorize
   token_endpoint: https://mcp.singular.net/oauth_server/token
   registration_endpoint: https://mcp.singular.net/oauth_server/register
@@ -26,43 +25,41 @@ authentication:
   metadata:
     authorization_server: well-known/singular-mcp-oauth-authorization-server.json
     protected_resource: well-known/singular-mcp-oauth-protected-resource.json
-  note: >-
-    Permissions are inherited from the Singular user account used to connect, and the MCP
-    can only read aggregated report data (no user-level data). Singular states MCP-passed
-    data is not used for model training.
+  note: Permissions are inherited from the Singular user account used to connect, and the MCP can only
+    read aggregated report data (no user-level data). Singular states MCP-passed data is not used for
+    model training.
 clients_supported:
-  - ChatGPT (Singular GPT, plus Developer Mode connector)
-  - Claude and Claude Code
-  - Cursor (cursor.directory/mcp/singular)
-  - Visual Studio Code / GitHub Copilot (1.101+)
-  - Gemini CLI
+- ChatGPT (Singular GPT, plus Developer Mode connector)
+- Claude and Claude Code
+- Cursor (cursor.directory/mcp/singular)
+- Visual Studio Code / GitHub Copilot (1.101+)
+- Gemini CLI
 tools:
-  - name: get_report
-    description: >-
-      Run a Singular report and return aggregated marketing data — the same data available
-      on the Singular main report page, covering SDK/S2S tracker data and network cost data.
-      Named in the Singular MCP documentation as "the Singular API" the connector binds to.
-    source: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
-  - name: get_supported_fields
-    description: Return every metric and dimension currently exposed to the MCP for this account.
-    source: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
-  - name: update_supported_fields
-    description: Add or remove fields from the account's MCP-exposed field list.
-    source: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
+- name: get_report
+  description: Run a Singular report and return aggregated marketing data — the same data available on
+    the Singular main report page, covering SDK/S2S tracker data and network cost data. Named in the Singular
+    MCP documentation as "the Singular API" the connector binds to.
+  source: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
+- name: get_supported_fields
+  description: Return every metric and dimension currently exposed to the MCP for this account.
+  source: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
+- name: update_supported_fields
+  description: Add or remove fields from the account's MCP-exposed field list.
+  source: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
 limits:
-  - "Response size is bounded by the LLM client: ~50k characters per query in ChatGPT, ~100k in Claude."
-  - SKAdNetwork data was documented as 'coming soon' as of 2026-06-29; assists and MTA data were added 2026-07-05.
+- 'Response size is bounded by the LLM client: ~50k characters per query in ChatGPT, ~100k in Claude.'
+- SKAdNetwork data was documented as 'coming soon' as of 2026-06-29; assists and MTA data were added 2026-07-05.
 x-evidence:
   fetched: '2026-08-12'
   tools_list:
     url: https://mcp.singular.net/mcp-server/mcp
-    method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    method: POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}
     http_status: 401
-    body: 'invalid_token — Authentication failed. The provided bearer token is invalid, expired, or no longer recognized by the server.'
-    note: >-
-      The live tool manifest is OAuth-gated, so the three tools above are recorded from
-      Singular's own documentation (names + descriptions only). Their input schemas require
-      authenticated introspection and are NOT recorded here rather than guessed.
+    body: invalid_token — Authentication failed. The provided bearer token is invalid, expired, or no
+      longer recognized by the server.
+    note: The live tool manifest is OAuth-gated, so the three tools above are recorded from Singular's
+      own documentation (names + descriptions only). Their input schemas require authenticated introspection
+      and are NOT recorded here rather than guessed.
   oauth_authorization_server:
     url: https://mcp.singular.net/.well-known/oauth-authorization-server
     http_status: 200
@@ -70,14 +67,20 @@ x-evidence:
     url: https://mcp.singular.net/.well-known/oauth-protected-resource
     http_status: 200
 other_mcp_endpoints:
-  - url: https://www.singular.net/wp-json/mcp/mcp-oauth-server
-    host: www.singular.net
-    status: published
-    http_status: 401
-    scopes: [mcp]
-    note: >-
-      A second, separate MCP endpoint served by Singular's WordPress marketing site via the
-      WP MCP adapter plugin (namespace `mcp`; routes /mcp, /mcp/mcp-oauth-server,
-      /mcp/mcp-adapter-default-server). It advertises RFC 8414 + RFC 9728 metadata at
-      www.singular.net and answers tools/list with an RFC 9728 Bearer challenge. This is the
-      website's content surface, NOT the marketing-data product server above.
+- url: https://www.singular.net/wp-json/mcp/mcp-oauth-server
+  host: www.singular.net
+  status: published
+  http_status: 401
+  scopes:
+  - mcp
+  note: A second, separate MCP endpoint served by Singular's WordPress marketing site via the WP MCP adapter
+    plugin (namespace `mcp`; routes /mcp, /mcp/mcp-oauth-server, /mcp/mcp-adapter-default-server). It
+    advertises RFC 8414 + RFC 9728 metadata at www.singular.net and answers tools/list with an RFC 9728
+    Bearer challenge. This is the website's content surface, NOT the marketing-data product server above.
+deployment:
+  mode: remote
+  endpoint: https://mcp.singular.net/mcp-server/mcp
+  verified: probed
+  probe: gated
+  checked: '2026-08-12'
+  source: catalog MCP census
