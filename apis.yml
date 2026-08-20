@@ -193,6 +193,10 @@ apis:
   baseURL: https://s2s.singular.net
   tags:
   - Server-to-Server
+  - Event
+  - Attribution
+  tags_raw:
+  - Server-to-Server
   - Events
   - Attribution
   properties:
@@ -251,6 +255,10 @@ apis:
   humanURL: https://support.singular.net/hc/en-us/articles/37923459892507-Singular-MCP
   baseURL: https://mcp.singular.net
   tags:
+  - MCP
+  - Artificial Intelligence
+  - Reporting
+  tags_raw:
   - MCP
   - AI
   - Reporting
