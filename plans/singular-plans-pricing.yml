@@ -70,3 +70,34 @@ api_access_note: >-
   behind additional fees. Get your data every way you need; via API, S3 buckets, UI exports,
   or load it directly to your warehouse of choice." The Testing Console API is the one
   documented exception: it is a premium feature enabled per-account by a Solution Engineer.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - negotiated
+  - subscription
+  units:
+  - negotiated
+  plans:
+  - name: Free
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Growth
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Enterprise
+    access: other
+    model: negotiated
+    model_how: derived
+    units:
+    - negotiated
+    periods: []
