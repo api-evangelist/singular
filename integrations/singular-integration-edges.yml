@@ -4,6 +4,7 @@ checked:
 - https://docs.mparticle.com/integrations/singular/event/
 - https://github.com/rudderlabs/rudder-integrations-config/tree/main/src/configurations/destinations/singular
 - https://hightouch.com/docs/destinations/singular
+- https://registry.modelcontextprotocol.io/v0/servers
 - https://storage.googleapis.com/tcfac/additional-consent-providers.csv
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/singular
 marketplace_apps: []
@@ -109,6 +110,38 @@ edges:
       sync_modes:
       - insert only
   detected_by: sweep-cdp.py
+  first_seen: '2026-10-14'
+- partner_name: MCP Registry
+  partner: mcp
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://registry.modelcontextprotocol.io/v0/servers?search=net.singular
+  contract_reference:
+    register: registry.modelcontextprotocol.io
+    spec_file: null
+    role: mcp-server-listing
+    registered_name: net.singular/mcp-server
+    register_id: net.singular/mcp-server
+    detected_by: sweep-agent-tools.py
+    detected: '2026-10-14'
+  mcp_registry:
+    servers:
+    - net.singular/mcp-server
+    hosted_remote: 1
+    local_package: 0
+    transports:
+      sse: 1
+      streamable-http: 1
+    auth_declared: 0
+    catalog_declared: true
+    namespace_domains:
+    - singular.net
+  matched_by:
+  - namespace-domain
+  detected_by: sweep-agent-tools.py
   first_seen: '2026-10-14'
 - partner_name: Google Ad Tech Providers
   partner: null
