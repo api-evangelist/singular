@@ -8,37 +8,14 @@ checked:
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/singular
 marketplace_apps: []
 edges:
-- partner_name: Google Ad Tech Providers
-  partner: null
-  partner_match: domain
-  type: contract
-  channel: standard-directory
-  relationship: standard-participant
-  direction: partner-built
-  evidence: https://storage.googleapis.com/tcfac/additional-consent-providers.csv
-  contract_reference:
-    register: Google Ad Tech Providers (Additional Consent)
-    spec_file: null
-    role: google-atp
-    registered_name: Singular Labs Inc.
-    register_id: '1046'
-    products:
-    - Singular Labs Inc.
-    matched_domain: singular.net
-    api_families: null
-    api_families_basis: null
-    detected_by: sweep-adtech.py
-    detected: '2026-10-14'
-  detected_by: sweep-adtech.py
-  detected: '2026-10-14'
 - partner_name: Twilio Segment
   partner: segment
   partner_match: aggregator
-  marketplace: coverage
+  marketplace: segment-partner-destinations
   channel: partner-built
-  direction: partner-built
-  type: coverage
-  relationship: connector-coverage
+  direction: third-party
+  type: marketplace
+  relationship: platform-app
   evidence: https://www.twilio.com/docs/segment/connections/destinations/catalog/singular
   coverage_role:
   - destination
@@ -133,6 +110,29 @@ edges:
       - insert only
   detected_by: sweep-cdp.py
   first_seen: '2026-10-14'
+- partner_name: Google Ad Tech Providers
+  partner: null
+  partner_match: domain
+  type: contract
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://storage.googleapis.com/tcfac/additional-consent-providers.csv
+  contract_reference:
+    register: Google Ad Tech Providers (Additional Consent)
+    spec_file: null
+    role: google-atp
+    registered_name: Singular Labs Inc.
+    register_id: '1046'
+    products:
+    - Singular Labs Inc.
+    matched_domain: singular.net
+    api_families: null
+    api_families_basis: null
+    detected_by: sweep-adtech.py
+    detected: '2026-10-14'
+  detected_by: sweep-adtech.py
+  detected: '2026-10-14'
 source:
 - https://docs.mparticle.com/integrations/singular/event/
 - https://github.com/rudderlabs/rudder-integrations-config/tree/main/src/configurations/destinations/singular
