@@ -1,10 +1,17 @@
 generated: '2026-10-14'
 method: searched
 checked:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
 - https://docs.mparticle.com/integrations/singular/event/
 - https://github.com/rudderlabs/rudder-integrations-config/tree/main/src/configurations/destinations/singular
 - https://hightouch.com/docs/destinations/singular
+- https://proxy.golang.org
+- https://pypi.org/pypi
 - https://registry.modelcontextprotocol.io/v0/servers
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
 - https://storage.googleapis.com/tcfac/additional-consent-providers.csv
 - https://www.twilio.com/docs/segment/connections/destinations/catalog/singular
 marketplace_apps: []
@@ -166,6 +173,66 @@ edges:
   - namespace-domain
   detected_by: sweep-agent-tools.py
   first_seen: '2026-10-14'
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/singular-sdk
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: singular-sdk
+      version: 1.4.12
+      released: '2026-10-07'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/singular-sdk
+      repo_leg: github-org:singular-labs
+      publisher_leg: email:singular.net
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: PyPI
+  partner: pypi
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (Python)
+  evidence: https://pypi.org/project/singular-api-client/
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: PyPI (public registry JSON)
+    spec_file: null
+    language: Python
+    packages:
+    - name: singular-api-client
+      version: 0.8.0
+      released: '2026-07-20'
+      released_field: upload_time
+      lapsed: false
+      page: https://pypi.org/project/singular-api-client/
+      repo_leg: github-org:singular-labs
+      publisher_leg: email:singular.net
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
 source:
 - https://docs.mparticle.com/integrations/singular/event/
 - https://github.com/rudderlabs/rudder-integrations-config/tree/main/src/configurations/destinations/singular
