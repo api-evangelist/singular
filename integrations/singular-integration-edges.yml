@@ -19,6 +19,11 @@ checked:
 - https://advertising.amazon.com/partners/directory
 - https://sellercentral.amazon.com/gspn
 - https://sellercentral.amazon.com/selling-partner-appstore
+- https://cdn.cocoapods.org/all_pods.txt
+- https://cert.appdefensealliance.org/certifications
+- https://play.google.com/sdks
+- https://search.maven.org/solrsearch/select
+- google-play/integrations/google-play-integration-edges.yml
 marketplace_apps: []
 edges:
 - partner_name: Google Ad Tech Providers
@@ -314,6 +319,55 @@ edges:
   detected_by: sweep-amazon-sp-api-appstore.py
   partner_tier:
   - PARTNER
+- partner_name: CocoaPods trunk
+  partner: null
+  partner_match: register
+  type: register
+  channel: package-registry
+  relationship: distribution-channel
+  direction: provider-built
+  evidence: https://cocoapods.org/pods/Singular-Kids-SDK
+  category: iOS SDK (CocoaPods)
+  contract_reference:
+    register: CocoaPods trunk (cdn.cocoapods.org Specs; github.com/CocoaPods/Specs)
+    spec_file: null
+    role: cocoapods-publisher
+    registered_name: Singular Labs
+    matched_domain: singular.net
+    matched_by: domain
+    pods:
+    - pod: Singular-Kids-SDK
+      version: 12.14.2
+      homepage: https://www.singular.net/
+      deprecated: false
+    - pod: Singular-SDK
+      version: 12.14.2
+      homepage: https://www.singular.net/
+      deprecated: false
+    signal_note: latest podspec homepage (domain) + authors (name); pods, versions and counts are context
+    detected_by: sweep-mobile-sdk-index.py
+    detected: '2026-10-21'
+  detected_by: sweep-mobile-sdk-index.py
+  first_seen: '2026-10-21'
+- partner_name: Google Play Developer (Google Play SDK Index)
+  partner: google-play
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: Google Play SDK Index
+  evidence: https://play.google.com/sdks/details/com-singular-sdk-singular_sdk
+  mirror_of: google-play/integrations/google-play-integration-edges.yml
+  apps:
+  - Singular SDK
+  listing_count: 1
+  detected: '2026-10-21'
+  detected_by: mirror-platform-listings.py
+  category: mobile SDK (analytics, marketing-and-engagement)
+  publisher_verified:
+  - Registered in Google Play SDK Console
 source:
 - https://docs.mparticle.com/integrations/singular/event/
 - https://github.com/rudderlabs/rudder-integrations-config/tree/main/src/configurations/destinations/singular
